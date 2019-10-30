@@ -134,11 +134,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-myhost = socket.gethostname() 
+myhost = socket.gethostname()
 
 if myhost == 'pdo-pro':
     try:
         from .pdo_local_settings import *
+        print("Run on: %s" % myhost)
+    except ImportError:
+        pass
+if myhost == 'bob':
+    try:
+        from .bob_local_settings import *
         print("Run on: %s" % myhost)
     except ImportError:
         pass

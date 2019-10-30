@@ -1,5 +1,6 @@
 # local settings
 pdo_local_settings.py
+bob_local_settings.py
 
 # logs
 logs/
