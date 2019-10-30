@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ServiceNote</title>
+    <style>
+        body {margin: 5px;font-family: Geneva, Arial, Helvetica, sans-serif;}
+        table {border-collapse: collapse;font-size: 10px; margin-top: 5px}
+        table, td, th {border: 1px solid lightgray;padding: 2px}
+        th {height: 70px}
+        a {margin-left: 10px;text-decoration: none}
+    </style>
+</head>
+<body>
+    {% include "adm_menu.html " %}
+    <table class="tg">
+        <tr>
+            <th>in id</th>
+            <th>in sn no</th>
+            <th>shipment from</th>
+            <th>shipment before</th>
+            <th>product name</th>
+            <th>counterparty</th>
+            <th>order no</th>
+            <th>amount</th>
+            <th>sn no</th>
+            <th>sn no amended</th>
+            <th>sn date</th>
+            <th>sn date fact</th>
+            <th>pickup plan days</th>
+            <th>pickup plan date</th>
+            <th>shipping plan days</th>
+            <th>shipping plan date</th>
+            <th>design plan days</th>
+            <th>design plan date</th>
+            <th>material plan days</th>
+            <th>material plan date</th>
+            <th>black metal plan days</th>
+            <th>black metal plan date</th>
+            <th>galvanized metal plan days</th>
+            <th>galvanized metal plan date</th>
+            <th>cast iron plan days</th>
+            <th>cast iron plan date</th>
+            <th>created</th>
+            <th>last updated</th>
+        </tr>
+        {% for p in poll %}
+        <tr>
+            <td>{{ p.in_id|default:"" }}</td>
+            <td>{{ p.in_sn_no|default:"" }}</td>
+            <td>{{ p.shipment_from|date:"d.m.Y" }}</td>
+            <td>{{ p.shipment_before|date:"d.m.Y" }}</td>
+            <td>{{ p.product_name|default:"" }}</td>
+            <td>{{ p.counterparty|default:"" }}</td>
+            <td>{{ p.order_no|default:"" }}</td>
+            <td>{{ p.amount|default:"" }}</td>
+            <td>{{ p.sn_no|default:"" }}</td>
+            <td>{{ p.sn_no_amended|default:"" }}</td>
+            <td>{{ p.sn_date|date:"d.m.Y" }}</td>
+            <td>{{ p.sn_date_fact|date:"d.m.Y" }}</td>
+            <td>{{ p.pickup_plan_days|default:"" }}</td>
+            <td>{{ p.pickup_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.shipping_plan_days|default:"" }}</td>
+            <td>{{ p.shipping_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.design_plan_days|default:"" }}</td>
+            <td>{{ p.design_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.material_plan_days|default:"" }}</td>
+            <td>{{ p.material_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.black_metal_plan_days|default:"" }}</td>
+            <td>{{ p.black_metal_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.galvanized_metal_plan_days|default:"" }}</td>
+            <td>{{ p.galvanized_metal_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.cast_iron_plan_days|default:"" }}</td>
+            <td>{{ p.cast_iron_plan_date|date:"d.m.Y" }}</td>
+            <td>{{ p.created|date:"d.m.Y"|default:"" }}</td>
+            <td>{{ p.last_updated|date:"d.m.Y" }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>InDocument</title>
+    <style>
+            body {margin: 5px;font-family: Geneva, Arial, Helvetica, sans-serif;}
+            table {border-collapse: collapse;font-size: 10px; margin-top: 5px}
+            table, td, th {border: 1px solid lightgray;padding: 2px}
+            th {height: 70px}
+            a {margin-left: 10px;text-decoration: none}
+        </style>
+</head>
+<body>
+    {% include "adm_menu.html " %}
+    <table class="tg">
+        <tr><th>document</th>
+            <th>number</th>
+            <th>date</th>
+            <th>held</th>
+            <th>order no</th>
+            <th>stock</th>
+            <th>shop recipient</th>
+            <th>warehouse recipient</th>
+            <th>nomenclature</th>
+            <th>item feature</th>
+            <th>amount</th>
+            <th>measure</th>
+            <th>order no text</th>
+            <th>responsible</th>
+            <th>coefficient</th>
+            <th>link</th>
+        </tr>
+        {% for p in poll %}
+        <tr>
+            <td>{{ p.document|default:"" }}</td>
+            <td>{{ p.number|default:"" }}</td>
+            <td>{{ p.date|default:"" }}</td>
+            <td>{{ p.held }}</td>
+            <td>{{ p.order_no|default:"" }}</td>
+            <td>{{ p.stock|default:"" }}</td>
+            <td>{{ p.shop_recipient|default:"" }}</td>
+            <td>{{ p.warehouse_recipient|default:"" }}</td>
+            <td>{{ p.nomenclature|default:"" }}</td>
+            <td>{{ p.item_feature|default:"" }}</td>
+            <td>{{ p.amount|default:"" }}</td>
+            <td>{{ p.measure|default:"" }}</td>
+            <td>{{ p.order_no_text|default:"" }}</td>
+            <td>{{ p.responsible|default:"" }}</td>
+            <td>{{ p.coefficient|default:"" }}</td>
+            <td>{{ p.link|default:"" }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+</body>
+</html>

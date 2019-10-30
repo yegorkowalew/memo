@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>File Rebuild</title>
+    <style>
+        body {margin: 5px;font-family: Geneva, Arial, Helvetica, sans-serif;}
+        table {border-collapse: collapse;font-size: 10px; margin-top: 5px}
+        table, td, th {border: 1px solid lightgray;padding: 2px}
+        th {height: 70px}
+        a {margin-left: 10px;text-decoration: none}
+    </style>
+</head>
+<body>
+    {% include "adm_menu.html " %}
+    <p>{{text}}</p>
+    <ul>
+        {% for link in update_links %}
+            <li><a href="{{link.link}}">{{link.name}}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

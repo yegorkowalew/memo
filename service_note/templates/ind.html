@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>InDocument</title>
+    <style>
+            body {margin: 5px;font-family: Geneva, Arial, Helvetica, sans-serif;}
+            table {border-collapse: collapse;font-size: 10px; margin-top: 5px}
+            table, td, th {border: 1px solid lightgray;padding: 2px}
+            th {height: 70px}
+            a {margin-left: 10px;text-decoration: none}
+        </style>
+</head>
+<body>
+    {% include "adm_menu.html " %}
+    <table class="tg">
+        <tr>
+            <th>in id</th>
+            <th>dispatcher</th>
+            <th>pickup issue</th>
+            <th>pickup date 1</th>
+            <th>pickup date 2</th>
+            <th>pickup date 3</th>
+            <th>shipping issue</th>
+            <th>shipping date 1</th>
+            <th>shipping date 2</th>
+            <th>shipping date 3</th>
+            <th>design issue</th>
+            <th>design date 1</th>
+            <th>design date 2</th>
+            <th>design date 3</th>
+            <th>drawings issue</th>
+            <th>drawings date 1</th>
+            <th>drawings date 2</th>
+            <th>drawings date 3</th>
+        </tr>
+        {% for p in poll %}
+        <tr>
+            <td>{{ p.in_id }}</td>
+            <td>{{ p.dispatcher }}</td>
+            <td>{{ p.pickup_issue|default:"" }}</td>
+            <td>{{ p.pickup_date_1|date:"d.m.Y" }}</td>
+            <td>{{ p.pickup_date_2|date:"d.m.Y" }}</td>
+            <td>{{ p.pickup_date_3|date:"d.m.Y" }}</td>
+            <td>{{ p.shipping_issue|default:"" }}</td>
+            <td>{{ p.shipping_date_1|date:"d.m.Y" }}</td>
+            <td>{{ p.shipping_date_2|date:"d.m.Y" }}</td>
+            <td>{{ p.shipping_date_3|date:"d.m.Y" }}</td>
+            <td>{{ p.design_issue|default:"" }}</td>
+            <td>{{ p.design_date_1|date:"d.m.Y" }}</td>
+            <td>{{ p.design_date_2|date:"d.m.Y" }}</td>
+            <td>{{ p.design_date_3|date:"d.m.Y" }}</td>
+            <td>{{ p.drawings_issue|default:"" }}</td>
+            <td>{{ p.drawings_date_1|date:"d.m.Y" }}</td>
+            <td>{{ p.drawings_date_2|date:"d.m.Y" }}</td>
+            <td>{{ p.drawings_date_3|date:"d.m.Y" }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+</body>
+</html>
