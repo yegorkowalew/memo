@@ -21,4 +21,5 @@ urlpatterns = [
     path('production/', include('service_note.urls')),
     path('on/', include('on.urls')),
     path('userprofile/', include('user_profile.urls')),
+    path('documents/', include('incoming_documents.urls')),
 ]

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Renew Documents</title>
+</head>
+<ul>
+    <li>{{ dispatcher }}</li>
+    <li>{{ dispatcher.full_name }}</li>
+    <li>{{ dispatcher.small_name }}</li>
+    <li>{{ dispatcher.no }}</li>
+</ul>
+<ul>
+    {% for i in dd %}
+    <li>{{ i.in_id }} - {{ i.dispatcher }}</li>
+    {% endfor %}
+</ul>
+
+<body>
+
+</body>
+
+</html>

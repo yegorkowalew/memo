@@ -67,10 +67,10 @@ def renew_profile(dispatcher):
     Возвращаем пользователя.
     """
     try:
-        user_profile = Profile.objects.get(
+        profile = Profile.objects.get(
             fullname=dispatcher['full_name'])
         logger.info("Пользователь: %s существует." % user_profile.fullname)
-        return user_profile.user
+        return profile
     except BaseException as ind:
         logger.info("Пользователь: %s не существует. Создаем." %
                     dispatcher['full_name'])
@@ -84,7 +84,7 @@ def renew_profile(dispatcher):
         user.profile.fullname_small = dispatcher['small_name']
         user.profile.user_no = dispatcher['no']
         user.save()
-        return user
+        return user.profile
 
 
 def renew_profiles(path):
