@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'service_note.apps.ServiceNoteConfig',
     'on.apps.OnConfig',
     'user_profile.apps.ProfileConfig',
+    'incoming_documents.apps.IncomingDocumentsConfig',
 ]
 
 MIDDLEWARE = [

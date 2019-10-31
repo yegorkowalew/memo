@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import DocumentDate
+
+@admin.register(DocumentDate)
+class DocumentDateAdmin(admin.ModelAdmin):
+    pass
