@@ -425,6 +425,7 @@ class Couterparty(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=255,
+        null=True
     )
 
 # * Мета

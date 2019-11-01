@@ -46,7 +46,7 @@
             <td class="datar">Материалы План</td>
             <td class="datar">Материалы Факт</td>
             <td class="datar">Материалы +/-</td>
-            
+<!--             
             <td class="datar">Черный металл План</td>
             <td class="datar">Черный металл Факт</td>
             <td class="datar">Черный металл +/-</td>
@@ -57,7 +57,7 @@
 
             <td class="datar">Чугун План</td>
             <td class="datar">Чугун Факт</td>
-            <td class="datar">Чугун +/-</td>
+            <td class="datar">Чугун +/-</td> -->
         </tr>
         {% for order in all_orders %}
         <tr>
@@ -87,17 +87,17 @@
             <td class="datar">Ф</td>
             <td class="datar">+</td>
             <!-- Черный металл -->
-            <td title="{{ order.black_metal_plan_date_count.1 }}" class="datar">{{ order.black_metal_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <!-- <td title="{{ order.black_metal_plan_date_count.1 }}" class="datar">{{ order.black_metal_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">Ф</td>
-            <td class="datar">+</td>
+            <td class="datar">+</td> -->
             <!-- Оцинкованный металл -->
-            <td title="{{ order.galvanized_metal_plan_date_count.1 }}" class="datar">{{ order.galvanized_metal_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <!-- <td title="{{ order.galvanized_metal_plan_date_count.1 }}" class="datar">{{ order.galvanized_metal_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">Ф</td>
-            <td class="datar">+</td>
+            <td class="datar">+</td> -->
             <!-- Чугун  -->
-            <td title="{{ order.cast_iron_plan_date_count.1 }}" class="datar">{{ order.cast_iron_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <!-- <td title="{{ order.cast_iron_plan_date_count.1 }}" class="datar">{{ order.cast_iron_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">Ф</td>
-            <td class="datar">+</td>
+            <td class="datar">+</td> -->
         </tr>
         {% endfor %}
     </table>
