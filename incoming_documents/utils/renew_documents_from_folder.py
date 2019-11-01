@@ -1,8 +1,7 @@
-from pathlib import Path
 from django.shortcuts import render
+from django.conf import settings
 import pandas as pd
 import os
-import time
 from user_profile.utils.renew_user_from_folder import get_dispatcher_from_path, renew_profile
 
 from incoming_documents.models import DocumentDate
@@ -10,11 +9,6 @@ from on.models import Order
 
 import logging
 logger = logging.getLogger(__name__)
-
-file_path = 'C:\\work\\memo\\TESTWORK\\График документации\\Диспетчер-4 - Пирлик Інна Іванівна\\График документации.xlsx'
-file = 'График документации.xlsx'
-path = 'C:\\work\\memo\\TESTWORK\\График документации\\Диспетчер-4 - Пирлик Інна Іванівна\\'
-
 
 def inDocumentReadFile(file_path):
     try:
@@ -215,11 +209,18 @@ def renew_all_documents_from_dispatcher(file_path):
                          (date_d['in_id'], ind))
     return True
 
+def folder_to_files_list(folder, file_name):
+    files_list = []
+    for root, _, files in os.walk(folder):
+        for file in files:
+            if file.endswith(file_name):
+                files_list.append(os.path.join(root, file))
+    return files_list
+
 def renew(request):
     # renew_all_documents_from_dispatcher(file_path)
+    files = folder_to_files_list(settings.DOCUMENTS_FOLDER, settings.DOCUMENTS_FILE)
+    for document_file in files:
+        renew_all_documents_from_dispatcher(document_file)
 
-    return render(request,
-                  'adm/renew-documents.html', {
-
-                  }
-                  )
+    return render(request, 'adm/renew-documents.html', {})
