@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Order List</title>
     <style>
-        .dateperiod {width: 5%; text-align:right}
-        .datar {width: 3%; text-align: center; word-break: break-all;}
-        body {margin: 5px;font-family: Arial, Ubuntu Mono, Geneva, Arial, Helvetica, sans-serif;}
-        table {border-collapse: collapse;font-size: 12px; margin-top: 5px; width:100%}
-        table, td, th {border: 1px solid lightgray;padding: 2px}
-        th {height: 70px}
-        a {margin-left: 10px;text-decoration: none}
+        .dateperiod {
+            width: 5%;
+            text-align: right
+        }
+
+        .datar {
+            width: 3%;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        body {
+            margin: 5px;
+            font-family: Arial, Ubuntu Mono, Geneva, Arial, Helvetica, sans-serif;
+        }
+
+        table {
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 5px;
+            width: 100%
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid lightgray;
+            padding: 2px
+        }
+
+        th {
+            height: 70px
+        }
+
+        a {
+            margin-left: 10px;
+            text-decoration: none
+        }
     </style>
 </head>
+
 <body>
     <p>Оперативный производственный график</p>
     <p>{{poll}}</p>
@@ -30,23 +63,23 @@
             <td class="datar">Дата СЗ</td>
             <td class="datar">Дата СЗ Факт</td>
             <td class="datar">Дата СЗ +/-</td>
-            
+
             <td class="datar">Комплектовочные План</td>
             <td class="datar">Комплектовочные Факт</td>
             <td class="datar">Комплектовочные +/-</td>
-            
+
             <td class="datar">Отгрузочные План</td>
             <td class="datar">Отгрузочные Факт</td>
             <td class="datar">Отгрузочные +/-</td>
-            
+
             <td class="datar">Конструкторская документация План</td>
             <td class="datar">Конструкторская документация Факт</td>
             <td class="datar">Конструкторская документация +/-</td>
-            
+
             <td class="datar">Материалы План</td>
             <td class="datar">Материалы Факт</td>
             <td class="datar">Материалы +/-</td>
-<!--             
+            <!--             
             <td class="datar">Черный металл План</td>
             <td class="datar">Черный металл Факт</td>
             <td class="datar">Черный металл +/-</td>
@@ -66,24 +99,30 @@
             <td>{{ order.couterparty.name|default:"" }}</td>
             <td>{{ order.order_no|default:"" }}</td>
             <td>{{ order.amount|floatformat:"0"|default:"" }}</td>
-            <td title="{% if order.sn_no_amended.all %} {% for sn_no in order.sn_no_amended.all %}{{ sn_no.name }} {% endfor %}{% else %}Нет дополнительных служебных записок{% endif %}">{{ order.sn_no.name|default:"" }}</td>
+            <td
+                title="{% if order.sn_no_amended.all %} {% for sn_no in order.sn_no_amended.all %}{{ sn_no.name }} {% endfor %}{% else %}Нет дополнительных служебных записок{% endif %}">
+                {{ order.sn_no.name|default:"" }}</td>
             <td class="datar">{{ order.sn_date|date:"d.m.y"|default:"" }}</td>
             <td class="datar">{{ order.sn_date_fact|date:"d.m.y"|default:"" }}</td>
             <td class="datar">{% if order.sn_date_diff != None %}{{ order.sn_date_diff }}{% endif %}</td>
             <!-- Комплектовочные -->
-            <td title="{{ order.pickup_plan_date_count.1 }}" class="datar">{{ order.pickup_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
-            <td class="datar">Ф</td>
+            <td title="{{ order.pickup_plan_date_count.1 }}" class="datar">
+                {{ order.pickup_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <td class="datar">{{ order.pickup_fact_date|date:"d.m.y"|default:"" }}</td>
             <td class="datar">{{ order.pickup_fact_date_diff }}</td>
             <!-- Отгрузочные -->
-            <td title="{{ order.shipping_plan_date_count.1 }}" class="datar">{{ order.shipping_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
-            <td class="datar">Ф</td>
+            <td title="{{ order.shipping_plan_date_count.1 }}" class="datar">
+                {{ order.shipping_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <td class="datar">{{ order.shipping_fact_date|date:"d.m.y"|default:"" }}</td>
             <td class="datar">+</td>
             <!-- Конструкторская документация -->
-            <td title="{{ order.design_plan_date_count.1 }}" class="datar">{{ order.design_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
-            <td class="datar">Ф</td>
+            <td title="{{ order.design_plan_date_count.1 }}" class="datar">
+                {{ order.design_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <td class="datar">{{ order.design_fact_date|date:"d.m.y"|default:"" }}</td>
             <td class="datar">+</td>
             <!-- Материалы -->
-            <td title="{{ order.material_plan_date_count.1 }}" class="datar">{{ order.material_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
+            <td title="{{ order.material_plan_date_count.1 }}" class="datar">
+                {{ order.material_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">Ф</td>
             <td class="datar">+</td>
             <!-- Черный металл -->
@@ -104,4 +143,5 @@
 
     <hr>
 </body>
+
 </html>

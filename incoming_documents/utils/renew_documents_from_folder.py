@@ -178,6 +178,7 @@ def renew_all_documents_from_dispatcher(file_path):
     dispatcher = renew_profile(dispatcher_dict)
     DocumentDate.objects.filter(dispatcher=dispatcher).delete()
     DocumentMust.objects.filter(dispatcher=dispatcher).delete()
+    edited_orders = []
     for date_d in dates:
         try:
             # TODO разобраться с документами, что такое изменение чертежей, что такое конструкторская документация
@@ -230,9 +231,61 @@ def renew_all_documents_from_dispatcher(file_path):
                 create_date(dispatcher, order, 'design_fact_date',
                             date_d['design_date_3'])
 
+            edited_orders.append(order)
         except BaseException as ind:
             logger.error("Ошибка добавления документа. ID: %s - %s" %
                          (date_d['in_id'], ind))
+    for order in edited_orders:
+        if DocumentDate.objects.filter(
+                order=order, document_type='pickup_fact_date').order_by('date'):
+            order.pickup_fact_date = DocumentDate.objects.filter(
+                order=order, document_type='pickup_fact_date').order_by('date')[0].date
+        if DocumentDate.objects.filter(
+                order=order, document_type='shipping_fact_date').order_by('date'):
+            order.shipping_fact_date = DocumentDate.objects.filter(
+                order=order, document_type='shipping_fact_date').order_by('date')[0].date
+        if DocumentDate.objects.filter(
+                order=order, document_type='design_fact_date').order_by('date'):
+            order.design_fact_date = DocumentDate.objects.filter(
+                order=order, document_type='design_fact_date').order_by('date')[0].date
+
+        order.save()
+
+        # print(order)
+    # all_orders = Order.objects.all()
+    # for order in all_orders:
+    # pfd = DocumentDate.objects.filter(
+    #     order=Order.objects.get(in_id=8), document_type='pickup_fact_date').order_by('date')[0].date
+    # print(pfd)
+    # documents = DocumentDate.objects.filter(dispatcher=dispatcher)
+    # all_orders = Order.objects.all()
+    # for order in all_orders:
+    #     pfd = DocumentDate.objects.filter(
+    #         order=order, document_type='pickup_fact_date').order_by('date')[0].date
+    #     print(pfd)
+    #     if pfd:
+    #         order.pickup_fact_date = pfd
+
+    #     sfd = DocumentDate.objects.filter(
+    #         order=order, document_type='shipping_fact_date').order_by('date')[0].date
+    #     print(sfd)
+    #     if sfd:
+    #         order.sipping_fact_date = sfd
+
+    #     dfd = DocumentDate.objects.filter(
+    #         order=order, document_type='design_fact_date').order_by('date')[0].date
+    #     print(dfd)
+    #     if dfd:
+    #         order.design_fact_date = dfd
+
+    # pickup_fact_date
+    # shipping_fact_date
+    # design_fact_date
+
+    # pickup_must
+    # shipping_must
+    # design_must
+    # last_date = DocumentDate.objects.filter(order=order, document_type='pickup_fact_date').order_by('date')[0].date
     return True
 
 
