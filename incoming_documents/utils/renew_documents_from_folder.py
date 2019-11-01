@@ -4,11 +4,12 @@ import pandas as pd
 import os
 from user_profile.utils.renew_user_from_folder import get_dispatcher_from_path, renew_profile
 
-from incoming_documents.models import DocumentDate
+from incoming_documents.models import DocumentDate, DocumentMust
 from on.models import Order
 
 import logging
 logger = logging.getLogger(__name__)
+
 
 def inDocumentReadFile(file_path):
     try:
@@ -151,63 +152,89 @@ def inDocumentReadFile(file_path):
  
 }
 """
-# dispatcher
-# order
-# must
-# document_type DOCUMENT_TYPE_CHOICES
-# date
 
 
 def renew_all_documents_from_dispatcher(file_path):
-    def create_date(dispatcher, order, must, document_type, date):
+    def create_date(dispatcher, order, document_type, date):
         document_date = DocumentDate(
             dispatcher=dispatcher,
-            order = order,
-            must = must,
-            document_type = document_type,
-            date = date
+            order=order,
+            document_type=document_type,
+            date=date
         )
-        document_date.save()        
+        document_date.save()
+
+    def create_must(dispatcher, order, must, document_type):
+        document_must = DocumentMust(
+            dispatcher=dispatcher,
+            order=order,
+            must=must,
+            document_type=document_type
+        )
+        document_must.save()
 
     dates = inDocumentReadFile(file_path)
     dispatcher_dict = get_dispatcher_from_path(file_path)
     dispatcher = renew_profile(dispatcher_dict)
     DocumentDate.objects.filter(dispatcher=dispatcher).delete()
+    DocumentMust.objects.filter(dispatcher=dispatcher).delete()
     for date_d in dates:
         try:
             # TODO разобраться с документами, что такое изменение чертежей, что такое конструкторская документация
             order = Order.objects.get(in_id=int(date_d['in_id']))
+            if date_d['pickup_issue']:
+                create_must(dispatcher, order,
+                            date_d['pickup_issue'], 'pickup_fact_date')
+
+            if date_d['shipping_issue']:
+                create_must(dispatcher, order,
+                            date_d['shipping_issue'], 'shipping_fact_date')
+
+            if date_d['design_issue']:
+                create_must(dispatcher, order,
+                            date_d['design_issue'], 'design_fact_date')
+
             if date_d['pickup_date_1']:
-                create_date(dispatcher, order, date_d['pickup_issue'], 'pickup_fact_date', date_d['pickup_date_1'])
+                create_date(dispatcher, order, 'pickup_fact_date',
+                            date_d['pickup_date_1'])
 
             if date_d['pickup_date_2']:
-                create_date(dispatcher, order, date_d['pickup_issue'], 'pickup_fact_date', date_d['pickup_date_2'])
+                create_date(dispatcher, order, 'pickup_fact_date',
+                            date_d['pickup_date_2'])
 
             if date_d['pickup_date_3']:
-                create_date(dispatcher, order, date_d['pickup_issue'], 'pickup_fact_date', date_d['pickup_date_3'])
+                create_date(dispatcher, order, 'pickup_fact_date',
+                            date_d['pickup_date_3'])
 
             if date_d['shipping_date_1']:
-                create_date(dispatcher, order, date_d['shipping_issue'], 'shipping_fact_date', date_d['shipping_date_1'])
+                create_date(dispatcher, order, 'shipping_fact_date',
+                            date_d['shipping_date_1'])
 
             if date_d['shipping_date_2']:
-                create_date(dispatcher, order, date_d['shipping_issue'], 'shipping_fact_date', date_d['shipping_date_2'])
+                create_date(dispatcher, order, 'shipping_fact_date',
+                            date_d['shipping_date_2'])
 
             if date_d['shipping_date_3']:
-                create_date(dispatcher, order, date_d['shipping_issue'], 'shipping_fact_date', date_d['shipping_date_3'])
+                create_date(dispatcher, order, 'shipping_fact_date',
+                            date_d['shipping_date_3'])
 
             if date_d['design_date_1']:
-                create_date(dispatcher, order, date_d['design_issue'], 'design_fact_date', date_d['design_date_1'])
+                create_date(dispatcher, order, 'design_fact_date',
+                            date_d['design_date_1'])
 
             if date_d['design_date_2']:
-                create_date(dispatcher, order, date_d['design_issue'], 'design_fact_date', date_d['design_date_2'])
+                create_date(dispatcher, order, 'design_fact_date',
+                            date_d['design_date_2'])
 
             if date_d['design_date_3']:
-                create_date(dispatcher, order, date_d['design_issue'], 'design_fact_date', date_d['design_date_3'])
-            
+                create_date(dispatcher, order, 'design_fact_date',
+                            date_d['design_date_3'])
+
         except BaseException as ind:
             logger.error("Ошибка добавления документа. ID: %s - %s" %
                          (date_d['in_id'], ind))
     return True
+
 
 def folder_to_files_list(folder, file_name):
     files_list = []
@@ -217,9 +244,11 @@ def folder_to_files_list(folder, file_name):
                 files_list.append(os.path.join(root, file))
     return files_list
 
+
 def renew(request):
     # renew_all_documents_from_dispatcher(file_path)
-    files = folder_to_files_list(settings.DOCUMENTS_FOLDER, settings.DOCUMENTS_FILE)
+    files = folder_to_files_list(
+        settings.DOCUMENTS_FOLDER, settings.DOCUMENTS_FILE)
     for document_file in files:
         renew_all_documents_from_dispatcher(document_file)
 
