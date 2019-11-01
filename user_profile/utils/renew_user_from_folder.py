@@ -69,7 +69,7 @@ def renew_profile(dispatcher):
     try:
         profile = Profile.objects.get(
             fullname=dispatcher['full_name'])
-        logger.info("Пользователь: %s существует." % user_profile.fullname)
+        logger.info("Пользователь: %s существует." % profile.fullname)
         return profile
     except BaseException as ind:
         logger.info("Пользователь: %s не существует. Создаем." %

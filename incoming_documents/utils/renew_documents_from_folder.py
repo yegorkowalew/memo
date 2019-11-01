@@ -1,12 +1,9 @@
 from pathlib import Path
-# from django.conf import settings
-# from django.contrib.auth.models import User
-# from user_profile.models import Profile
 from django.shortcuts import render
 import pandas as pd
 import os
 import time
-from user_profile.utils.renew_user_from_folder import get_dispatcher_from_path
+from user_profile.utils.renew_user_from_folder import get_dispatcher_from_path, renew_profile
 
 from incoming_documents.models import DocumentDate
 from on.models import Order
@@ -16,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 file_path = 'C:\\work\\memo\\TESTWORK\\График документации\\Диспетчер-4 - Пирлик Інна Іванівна\\График документации.xlsx'
 file = 'График документации.xlsx'
-path = 'C:\\work\\memo\\TESTWORK\\График документации\\Диспетчер-4 - Пирлик Інна Іванівна'
+path = 'C:\\work\\memo\\TESTWORK\\График документации\\Диспетчер-4 - Пирлик Інна Іванівна\\'
 
 
-def inDocumentReadFile(path, file_name):
+def inDocumentReadFile(file_path):
     try:
         df = pd.read_excel(
-            os.path.join(path, file_name),
+            file_path,
             sheet_name="Документация",
             usecols=[
                 'ID',
@@ -73,11 +70,10 @@ def inDocumentReadFile(path, file_name):
 
     except Exception as ind:
         logger.error("inDocumentReadFile error with file: %s - %s" %
-                     (file_name, ind))
+                     (file_path, ind))
     else:
         df = df.rename(columns={
             'ID': 'in_id',
-            'Диспетчер': 'dispatcher',
             'Комплектовочные Выдача': 'pickup_issue',
             'Комплектовочные Дата 1': 'pickup_date_1',
             'Комплектовочные Дата 2': 'pickup_date_2',
@@ -96,7 +92,6 @@ def inDocumentReadFile(path, file_name):
             'Изменения чертежей Дата 3': 'drawings_date_3'
         }
         )
-        df['dispatcher'] = os.path.split(path)[-1]
         df['pickup_date_1'] = pd.to_datetime(df['pickup_date_1'])
         df['pickup_date_2'] = pd.to_datetime(df['pickup_date_2'])
         df['pickup_date_3'] = pd.to_datetime(df['pickup_date_3'])
@@ -127,34 +122,6 @@ def inDocumentReadFile(path, file_name):
         df = df.where(df.notnull(), None)
         df = df.to_dict('records')
         return df
-
-
-def inDocumentFindFile(in_folder, need_file):
-    tree = os.walk(in_folder)
-    folder_list = []
-    for i in tree:
-        for address, dirs, files in [i]:
-            for fl in files:
-                if fl == need_file:
-                    folder_list.append(address)
-    return folder_list
-
-
-def inDocumentRebuild(in_folder, need_file, m_obj):
-    t = time.time()
-    m_obj.objects.all().delete()
-    logger.info(
-        "Clear DBTable: {} - {:.3}".format(m_obj.__name__, (time.time()-t)))
-
-    for folder in inDocumentFindFile(in_folder, need_file):
-        t = time.time()
-        df = inDocumentReadFile(folder, need_file)
-        logger.info(
-            "Convert to Table: {} - {:.3}".format(m_obj.__name__, (time.time()-t)))
-        t = time.time()
-        insertToDB(df, m_obj)
-        logger.info(
-            "Insert to DBTable: {} - {:.3}".format(m_obj.__name__, (time.time()-t)))
 
 
 """
@@ -192,28 +159,67 @@ def inDocumentRebuild(in_folder, need_file, m_obj):
 """
 # dispatcher
 # order
+# must
 # document_type DOCUMENT_TYPE_CHOICES
 # date
 
 
-def renew(request):
-    dates = inDocumentReadFile(path, file)
+def renew_all_documents_from_dispatcher(file_path):
+    def create_date(dispatcher, order, must, document_type, date):
+        document_date = DocumentDate(
+            dispatcher=dispatcher,
+            order = order,
+            must = must,
+            document_type = document_type,
+            date = date
+        )
+        document_date.save()        
 
-    dispatcher = get_dispatcher_from_path(file_path)
+    dates = inDocumentReadFile(file_path)
+    dispatcher_dict = get_dispatcher_from_path(file_path)
+    dispatcher = renew_profile(dispatcher_dict)
+    DocumentDate.objects.filter(dispatcher=dispatcher).delete()
     for date_d in dates:
         try:
+            # TODO разобраться с документами, что такое изменение чертежей, что такое конструкторская документация
             order = Order.objects.get(in_id=int(date_d['in_id']))
-            order.pickup_must = date_d['pickup_issue']
-            order.shipping_must = date_d['shipping_issue']
-            order.design_must = date_d['design_issue']
-            order.save()
+            if date_d['pickup_date_1']:
+                create_date(dispatcher, order, date_d['pickup_issue'], 'pickup_fact_date', date_d['pickup_date_1'])
 
+            if date_d['pickup_date_2']:
+                create_date(dispatcher, order, date_d['pickup_issue'], 'pickup_fact_date', date_d['pickup_date_2'])
+
+            if date_d['pickup_date_3']:
+                create_date(dispatcher, order, date_d['pickup_issue'], 'pickup_fact_date', date_d['pickup_date_3'])
+
+            if date_d['shipping_date_1']:
+                create_date(dispatcher, order, date_d['shipping_issue'], 'shipping_fact_date', date_d['shipping_date_1'])
+
+            if date_d['shipping_date_2']:
+                create_date(dispatcher, order, date_d['shipping_issue'], 'shipping_fact_date', date_d['shipping_date_2'])
+
+            if date_d['shipping_date_3']:
+                create_date(dispatcher, order, date_d['shipping_issue'], 'shipping_fact_date', date_d['shipping_date_3'])
+
+            if date_d['design_date_1']:
+                create_date(dispatcher, order, date_d['design_issue'], 'design_fact_date', date_d['design_date_1'])
+
+            if date_d['design_date_2']:
+                create_date(dispatcher, order, date_d['design_issue'], 'design_fact_date', date_d['design_date_2'])
+
+            if date_d['design_date_3']:
+                create_date(dispatcher, order, date_d['design_issue'], 'design_fact_date', date_d['design_date_3'])
+            
         except BaseException as ind:
             logger.error("Ошибка добавления документа. ID: %s - %s" %
                          (date_d['in_id'], ind))
+    return True
+
+def renew(request):
+    # renew_all_documents_from_dispatcher(file_path)
+
     return render(request,
                   'adm/renew-documents.html', {
-                      'dispatcher': dispatcher,
-                      'dd': dates
+
                   }
                   )

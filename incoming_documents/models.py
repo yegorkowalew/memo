@@ -27,7 +27,10 @@ class DocumentDate(models.Model):
         Order, 
         on_delete=models.CASCADE
     )
-
+    must = models.BooleanField(
+            verbose_name='Выдаются',
+            default=True,
+    )
     document_type = models.CharField(
         max_length=40,
         choices=DOCUMENT_TYPE_CHOICES,
