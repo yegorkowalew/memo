@@ -121,7 +121,8 @@
             <td title="{{ order.design_plan_date_count.1 }}" class="datar">
                 {{ order.design_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">{{ order.design_fact_date|date:"d.m.y"|default:"" }}</td>
-            <td class="datar">+</td>
+            <td title="{{ order.design_fact_date_diff.1 }}" class="datar">
+                {{ order.design_fact_date_diff.0|default:"" }}</td>
             <!-- Материалы -->
             <td title="{{ order.material_plan_date_count.1 }}" class="datar">
                 {{ order.material_plan_date_count.0|date:"d.m.y"|default:"" }}</td>

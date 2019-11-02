@@ -468,6 +468,15 @@ class Order(models.Model):
         )
         return get_date_diff(self.ready, plan_date, self.pickup_fact_date, self.sn_date, self.pickup_must)
 
+    def design_fact_date_diff(self):
+        plan_date, _ = get_plan_date(
+            self.design_plan_days,
+            self.design_plan_date,
+            self.sn_date,
+            self.design_must
+        )
+        return get_date_diff(self.ready, plan_date, self.design_fact_date, self.sn_date, self.design_must)
+
 
 class Couterparty(models.Model):
     """
