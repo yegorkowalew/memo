@@ -109,12 +109,14 @@
             <td title="{{ order.pickup_plan_date_count.1 }}" class="datar">
                 {{ order.pickup_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">{{ order.pickup_fact_date|date:"d.m.y"|default:"" }}</td>
-            <td class="datar">{{ order.pickup_fact_date_diff }}</td>
+            <td title="{{ order.pickup_fact_date_diff.1 }}" class="datar">{{ order.pickup_fact_date_diff.0|default:"" }}
+            </td>
             <!-- Отгрузочные -->
             <td title="{{ order.shipping_plan_date_count.1 }}" class="datar">
                 {{ order.shipping_plan_date_count.0|date:"d.m.y"|default:"" }}</td>
             <td class="datar">{{ order.shipping_fact_date|date:"d.m.y"|default:"" }}</td>
-            <td class="datar">+</td>
+            <td title="{{ order.shipping_fact_date_diff.1 }}" class="datar">
+                {{ order.shipping_fact_date_diff.0|default:"" }}</td>
             <!-- Конструкторская документация -->
             <td title="{{ order.design_plan_date_count.1 }}" class="datar">
                 {{ order.design_plan_date_count.0|date:"d.m.y"|default:"" }}</td>

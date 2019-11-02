@@ -2,7 +2,8 @@
 """ Модели Заказов """
 from django.db import models
 
-from datetime import timedelta  
+from datetime import timedelta
+from datetime import date
 
 # TODO считать рабочие дни. То-есть дни кроме сб, вс
 """
@@ -11,6 +12,7 @@ rr = rrule(DAILY, byweekday=(MO, TU, WE, TH, FR), count = 4)
 rr[-1]
 datetime.datetime(2019, 11, 4, 13, 50, 46)
 """
+
 
 def get_plan_date(days, plan_date, sn_date, must):
     """
@@ -41,6 +43,40 @@ def get_plan_date(days, plan_date, sn_date, must):
             return None, "Ошибка: %s" % ind
     else:
         return None, 'Документ не выдается.'
+
+
+def get_date_diff(ready, plan_date, fact_date, sn_date, must):
+    """
+    Разница между Датой по плану и датой по факту.
+    ready - готов ли заказ (bool)
+    plan_date - дата по плану (date)
+    fact_date - дата по факту (date)
+    sn_date - дата служебной записки (date)
+    must - нужно ли выдавать документацию на этот заказ (bool)
+    """
+    if must:  # если документ выдается:
+        if ready:
+            # если заказ готов и стоит дата план и дата факт - считаем дата план - дата факт, "Дата План и Дата Факт установлены. (Дата План - Дата Факт)"
+            if plan_date and fact_date:
+                return (plan_date - fact_date).days, "Дата План и Дата Факт установлены. (Дата План - Дата Факт)"
+            elif plan_date and fact_date == None:  # если заказ готов и стоит дата план, даты факт нету - None, Документ не выдан до конца произовдства
+                return None, "Документ не выдан до конца произовдства"
+            # если заказ готов и дата план нету, дата факт есть - Дата СЗ - Дата факт, Дата план не установлена, считаем от Даты СЗ. (Дата СЗ - Дата факт)
+            elif plan_date == None and fact_date:
+                return (sn_date - fact_date).days, "Дата План не установлена, считаем от Даты СЗ. (Дата СЗ - Дата факт)"
+        elif not ready:
+            # если заказ не готов и стоит дата план и дата факт - считаем дата план - дата факт, "Дата План и Дата Факт установлены. (Дата План - Дата Факт)"
+            if plan_date and fact_date:
+                return (plan_date - fact_date).days, "Дата План и Дата Факт установлены. (Дата План - Дата Факт)"
+            # если заказ не готов и стоит дата план, даты факт нету - Дата план - сегодня, "Документ по факту еще не выдан (Дата План - Сегодня)"
+            elif plan_date and fact_date == None:
+                return (plan_date - date.today()).days, "Документ по факту еще не выдан (Дата План - Сегодня)"
+            # если заказ готов и дата план нету, дата факт есть - Дата СЗ - Дата факт, Дата план не установлена, считаем от Даты СЗ. (Дата СЗ - Дата факт)
+            elif plan_date == None and fact_date:
+                return (sn_date - fact_date).days, "Дата План не установлена, считаем от Даты СЗ. (Дата СЗ - Дата факт)"
+    elif not must:
+        return None, "Документы не выдаются"
+
 
 class Order(models.Model):
     """
@@ -97,6 +133,11 @@ class Order(models.Model):
         last_updated = 
     """
 # * Основное
+    ready = models.BooleanField(
+        verbose_name='Заказ Готов',
+        blank=True,
+        default=False,
+    )
     in_id = models.IntegerField(
         verbose_name='ID',
         unique=True,
@@ -352,7 +393,7 @@ class Order(models.Model):
     def __str__(self):
         """Unicode representation of OnItm."""
         return ("%s - %s") % (self.order_no, self.product_name)
-    
+
     def get_date_period_small(self):
         """Краткий формат дат отгрузки. Отгрузка: 16.02-18.02.19"""
         if self.shipment_from:
@@ -365,8 +406,8 @@ class Order(models.Model):
             shipment_before = self.shipment_before.strftime("%d.%m.%y")
         else:
             shipment_before = ''
-        return "%s%s%s" % (shipment_from, sep ,shipment_before)
-    
+        return "%s%s%s" % (shipment_from, sep, shipment_before)
+
     def get_date_period_full(self):
         """Полный формат дат отгрузки. Отгрузка: 16.02.2019-18.02.2019"""
         if self.shipment_from:
@@ -379,7 +420,7 @@ class Order(models.Model):
             shipment_before = self.shipment_before.strftime("%d.%m.%Y")
         else:
             shipment_before = ''
-        return "%s%s%s" % (shipment_from, sep ,shipment_before)
+        return "%s%s%s" % (shipment_from, sep, shipment_before)
 
     def sn_date_diff(self):
         """Разница между датой СЗ и датой получения СЗ."""
@@ -396,7 +437,7 @@ class Order(models.Model):
 
     def design_plan_date_count(self):
         return get_plan_date(self.design_plan_days, self.design_plan_date, self.sn_date, self.design_must)
-    
+
     def material_plan_date_count(self):
         return get_plan_date(self.material_plan_days, self.material_plan_date, self.sn_date, self.material_must)
 
@@ -409,11 +450,24 @@ class Order(models.Model):
     def cast_iron_plan_date_count(self):
         return get_plan_date(self.cast_iron_plan_days, self.cast_iron_plan_date, self.sn_date, self.cast_iron_must)
 
+    def shipping_fact_date_diff(self):
+        plan_date, _ = get_plan_date(
+            self.shipping_plan_days,
+            self.shipping_plan_date,
+            self.sn_date,
+            self.shipping_must
+        )
+        return get_date_diff(self.ready, plan_date, self.shipping_fact_date, self.sn_date, self.shipping_must)
+
     def pickup_fact_date_diff(self):
-        if self.pickup_must:
-            return '+'
-        else:
-            return '-'
+        plan_date, _ = get_plan_date(
+            self.pickup_plan_days,
+            self.pickup_plan_date,
+            self.sn_date,
+            self.pickup_must
+        )
+        return get_date_diff(self.ready, plan_date, self.pickup_fact_date, self.sn_date, self.pickup_must)
+
 
 class Couterparty(models.Model):
     """

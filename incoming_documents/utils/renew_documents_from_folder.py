@@ -248,7 +248,14 @@ def renew_all_documents_from_dispatcher(file_path):
                 order=order, document_type='design_fact_date').order_by('date'):
             order.design_fact_date = DocumentDate.objects.filter(
                 order=order, document_type='design_fact_date').order_by('date')[0].date
+        if DocumentMust.objects.filter(order=order, document_type='pickup_fact_date', must=True):
+            order.pickup_must = False
 
+        if DocumentMust.objects.filter(order=order, document_type='shipping_fact_date', must=True):
+            order.pickup_must = False
+
+        if DocumentMust.objects.filter(order=order, document_type='design_fact_date', must=True):
+            order.pickup_must = False
         order.save()
 
         # print(order)
