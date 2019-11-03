@@ -53,6 +53,7 @@
     <hr>
     <table>
         <tr>
+            <td>Г</td>
             <td>Отгрузка</td>
             <td>Продукция</td>
             <td>Контрагент</td>
@@ -79,6 +80,7 @@
         </tr>
         {% for order in all_orders %}
         <tr>
+            <td>{% if order.ready %}Г{% else %}>{% endif %}</td>
             <td class="dateperiod" title="{{ order.get_date_period_full }}">{{ order.get_date_period_small }}</td>
             <td>{{ order.product_name|default:"" }}</td>
             <td>{{ order.couterparty.name|default:"" }}</td>

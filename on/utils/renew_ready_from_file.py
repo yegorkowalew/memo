@@ -60,28 +60,17 @@ def readyOrderReadFile(ro_file):
 
 
 def readyOrderRebuild(sn_file):
-    # t = time.time()
-    # m_obj.objects.all().delete()
-    # logger.info(
-        # "Clear DBTable: {} - {:.3}".format(m_obj.__name__, (time.time()-t)))
-    # t = time.time()
     df = readyOrderReadFile(sn_file)
     for r_order in df:
         try:
             order = Order.objects.get(in_id=r_order['in_id'])
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as ind:
+            logger.info("Renew ready: {}".format(ind))
+        else:
             order.ready = r_order['ready']
             if r_order['ready_date']:
                 order.ready_date = r_order['ready_date']
-                print('дата готовности')
             order.save()
-
-    # logger.info(
-    # "Convert to Table: {} - {:.3}".format(m_obj.__name__, (time.time()-t)))
-    # t = time.time()
-    # insertToDB(df, m_obj)
-    # logger.info(
-    # "Insert to DBTable: {} - {:.3}".format(m_obj.__name__, (time.time()-t)))
 
 
 def renew(request):
