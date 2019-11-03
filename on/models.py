@@ -138,6 +138,11 @@ class Order(models.Model):
         blank=True,
         default=False,
     )
+    ready_date = models.DateField(
+        verbose_name='Дата Готовности заказа',
+        blank=True,
+        null=True,
+    )
     in_id = models.IntegerField(
         verbose_name='ID',
         unique=True,
@@ -393,6 +398,7 @@ class Order(models.Model):
     def __str__(self):
         """Unicode representation of OnItm."""
         return ("%s - %s") % (self.order_no, self.product_name)
+        # return str(self.pk)
 
     def get_date_period_small(self):
         """Краткий формат дат отгрузки. Отгрузка: 16.02-18.02.19"""
@@ -500,7 +506,7 @@ class Couterparty(models.Model):
 
     def __str__(self):
         """Unicode representation of Couterparty."""
-        return self.name
+        return str(self.name)
 
 
 class OfficeNote(models.Model):
@@ -533,7 +539,7 @@ class OfficeNote(models.Model):
 
     def __str__(self):
         """Unicode representation of OfficeNote."""
-        return self.name
+        return str(self.pk)
 
 
 class ProductType(models.Model):
@@ -555,4 +561,4 @@ class ProductType(models.Model):
 
     def __str__(self):
         """Unicode representation of ProductType."""
-        return self.name
+        return str(self.name)
