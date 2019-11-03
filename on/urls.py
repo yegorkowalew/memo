@@ -4,6 +4,7 @@ from . import views
 from .utils import renew_from_file, renew_ready_from_file, utils
 
 urlpatterns = [
+    path('dashboard/', views.dashboard),
     path('adm/', utils.ind),
     path('adm/renew/', renew_from_file.renew),
     path('adm/renew-ready/', renew_ready_from_file.renew),

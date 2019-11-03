@@ -7,6 +7,28 @@ from incoming_documents.models import DocumentDate
 from django.db.models import Q
 
 
+def dashboard(request):
+    orders = Order.objects.all().count()
+
+    ready_orders = Order.objects.filter(ready=True).count()
+    ready_orders_percent = int(ready_orders*100/orders)
+
+    process_orders = Order.objects.filter(ready=False).count()
+    process_orders_percent = int(process_orders*100/orders)
+    graf = {
+        'ready_orders': ready_orders,
+        'ready_orders_percent': ready_orders_percent,
+        'process_orders': process_orders,
+        'process_orders_percent': process_orders_percent
+    }
+    return render(request, 'dashboard.html', {
+        'alerts': 'alerts',
+        'messages': 11,
+        'title': 'Главная страница',
+        'graf': graf
+    })
+
+
 def order_list(request):
     # p = 'yo'
     # order = Order.objects.get(in_id=8)
