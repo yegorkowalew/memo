@@ -24,7 +24,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', {
         'alerts': 'alerts',
         'messages': 11,
-        'title': 'Главная страница',
+        'title': 'Сводка',
         'graf': graf
     })
 
@@ -45,7 +45,7 @@ def adm_index(request):
     return render(request, 'adm/adm_index.html', {
         'alerts': 'alerts',
         'messages': 11,
-        'title': 'Главная страница',
+        'title': 'Cтраница администратора',
         'graf': graf
     })
 
