@@ -28,6 +28,26 @@ def dashboard(request):
         'graf': graf
     })
 
+def adm_index(request):
+    orders = Order.objects.all().count()
+
+    ready_orders = Order.objects.filter(ready=True).count()
+    ready_orders_percent = int(ready_orders*100/orders)
+
+    process_orders = Order.objects.filter(ready=False).count()
+    process_orders_percent = int(process_orders*100/orders)
+    graf = {
+        'ready_orders': ready_orders,
+        'ready_orders_percent': ready_orders_percent,
+        'process_orders': process_orders,
+        'process_orders_percent': process_orders_percent
+    }
+    return render(request, 'adm/adm_index.html', {
+        'alerts': 'alerts',
+        'messages': 11,
+        'title': 'Главная страница',
+        'graf': graf
+    })
 
 def order_list(request):
     # p = 'yo'
