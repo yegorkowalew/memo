@@ -5,6 +5,7 @@ from django.shortcuts import render
 import pandas as pd
 from django.http import Http404
 from django.shortcuts import render, redirect
+from history.models import History
 import logging
 logger = logging.getLogger(__name__)
 
@@ -71,6 +72,13 @@ def readyOrderRebuild(sn_file):
             if r_order['ready_date']:
                 order.ready_date = r_order['ready_date']
             order.save()
+    History.objects.create(
+        icon='fas fa-file-excel',
+        color='text-success',
+        name='Файл: "Готовые заказы.xlsx" обновлен.',
+        link='/on',
+        short_text='Обновлено: %s позиций.' % (len(df)),
+    )
 
 
 def renew(request):

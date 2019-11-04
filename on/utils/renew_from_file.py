@@ -1,15 +1,16 @@
+from on.models import OfficeNote, Couterparty, ProductType, Order
+import pandas as pd
+from django.conf import settings
 from django.shortcuts import render
 
 from django.http import Http404
 from django.shortcuts import render, redirect
+from history.models import History
 import logging
 logger = logging.getLogger(__name__)
 
-from django.conf import settings
 file_path = settings.ORDER_FILE
 
-import pandas as pd
-from on.models import OfficeNote, Couterparty, ProductType, Order
 
 def order_read_file(sn_file):
     try:
@@ -83,6 +84,7 @@ def order_read_file(sn_file):
         df_records = df.to_dict('records')
         return True, df_records
 
+
 def get_sn_obj(count_str):
     obj_list = []
     if count_str:
@@ -92,6 +94,7 @@ def get_sn_obj(count_str):
         return obj_list
     else:
         return None
+
 
 def get_update(records):
     for record in records:
@@ -107,32 +110,32 @@ def get_update(records):
         obj_order, _ = Order.objects.get_or_create(
             in_id=record['in_id'],
         )
-        obj_order.shipment_from=record['shipment_from']
-        obj_order.shipment_before=record['shipment_before']
-        obj_order.personal_no=record['personal_no']
-        obj_order.according_to=record['according_to']
-        obj_order.pruduct_type=obj_type
-        obj_order.product_name=record['product_name']
-        obj_order.product_text=record['product_text']
-        obj_order.couterparty=obj_counterparty
-        obj_order.order_no=record['order_no']
-        obj_order.amount=record['amount']
-        obj_order.sn_date=record['sn_date']
-        obj_order.sn_date_fact=record['sn_date_fact']
-        obj_order.pickup_plan_days=record['pickup_plan_days']
-        obj_order.pickup_plan_date=record['pickup_plan_date']
-        obj_order.shipping_plan_days=record['shipping_plan_days']
-        obj_order.shipping_plan_date=record['shipping_plan_date']
-        obj_order.design_plan_days=record['design_plan_days']
-        obj_order.design_plan_date=record['design_plan_date']
-        obj_order.material_plan_days=record['material_plan_days']
-        obj_order.material_plan_date=record['material_plan_date']
-        obj_order.black_metal_plan_days=record['black_metal_plan_days']
-        obj_order.black_metal_plan_date=record['black_metal_plan_date']
-        obj_order.galvanized_metal_plan_days=record['galvanized_metal_plan_days']
-        obj_order.galvanized_metal_plan_date=record['galvanized_metal_plan_date']
-        obj_order.cast_iron_plan_days=record['cast_iron_plan_days']
-        obj_order.cast_iron_plan_date=record['cast_iron_plan_date']
+        obj_order.shipment_from = record['shipment_from']
+        obj_order.shipment_before = record['shipment_before']
+        obj_order.personal_no = record['personal_no']
+        obj_order.according_to = record['according_to']
+        obj_order.pruduct_type = obj_type
+        obj_order.product_name = record['product_name']
+        obj_order.product_text = record['product_text']
+        obj_order.couterparty = obj_counterparty
+        obj_order.order_no = record['order_no']
+        obj_order.amount = record['amount']
+        obj_order.sn_date = record['sn_date']
+        obj_order.sn_date_fact = record['sn_date_fact']
+        obj_order.pickup_plan_days = record['pickup_plan_days']
+        obj_order.pickup_plan_date = record['pickup_plan_date']
+        obj_order.shipping_plan_days = record['shipping_plan_days']
+        obj_order.shipping_plan_date = record['shipping_plan_date']
+        obj_order.design_plan_days = record['design_plan_days']
+        obj_order.design_plan_date = record['design_plan_date']
+        obj_order.material_plan_days = record['material_plan_days']
+        obj_order.material_plan_date = record['material_plan_date']
+        obj_order.black_metal_plan_days = record['black_metal_plan_days']
+        obj_order.black_metal_plan_date = record['black_metal_plan_date']
+        obj_order.galvanized_metal_plan_days = record['galvanized_metal_plan_days']
+        obj_order.galvanized_metal_plan_date = record['galvanized_metal_plan_date']
+        obj_order.cast_iron_plan_days = record['cast_iron_plan_days']
+        obj_order.cast_iron_plan_date = record['cast_iron_plan_date']
 
         # sn_no
         sn_no = get_sn_obj(record['sn_no'])
@@ -144,19 +147,38 @@ def get_update(records):
             obj_order.sn_no_amended.add(*list_sn_no)
         obj_order.save()
 
+
 def renew_from_file(file_path):
     orders = order_read_file(file_path)
     get_update(orders)
 
+
 def renew(request):
     Order.objects.all().delete()
-    
+
     no_error, records = order_read_file(file_path)
     if no_error:
         get_update(records)
-        logger.info("RENEW from file %s with %s user. rows:%s" % (file_path, request.user, len(records)))
+        info_text = "Обновлено: %s строк, пользователь: %s, файл: %s" % (
+            len(records), request.user, file_path)
+        logger.info(info_text)
+        History.objects.create(
+            icon='far fa-file-excel',
+            color='text-success',
+            name='Файл: "Служебные записки.xlsx" обновлен.',
+            link='/on',
+            short_text=info_text,
+        )
         return render(request, 'adm/on-adm-renew.html', {'lenrecords': len(records)})
     else:
-        logger.error("Error in page renew from file with %s user" % (request.user))
+        info_text = "Ошибка обновления файла %s пользователем %s" % (
+            file_path, request.user)
+        logger.error(info_text)
+        History.objects.create(
+            icon='far fa-file-excel',
+            color='text-danger',
+            name='Файл: "Служебные записки.xlsx" НЕ обновлен.',
+            link='/on',
+            short_text=info_text,
+        )
         return render(request, 'adm/on-adm-renew.html', {'lenrecords': 'Error'})
-    

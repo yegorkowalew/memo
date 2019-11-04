@@ -1,9 +1,8 @@
 from django.db import models
 
 
-class IconType(models.Model):
-    """Model definition for IconType."""
-
+class History(models.Model):
+    """Model definition for History."""
     icon = models.CharField(
         verbose_name="Код иконки",
         max_length=50
@@ -11,24 +10,6 @@ class IconType(models.Model):
     color = models.CharField(
         verbose_name="Цвет",
         max_length=50
-    )
-
-    class Meta:
-        """Meta definition for IconType."""
-
-        verbose_name = 'тип иконки'
-        verbose_name_plural = 'типы иконок'
-
-    def __str__(self):
-        """Unicode representation of IconType."""
-        return '%s, %s' % (self.icon, self.color)
-
-
-class History(models.Model):
-    """Model definition for History."""
-    icon_text = models.ForeignKey(
-        IconType,
-        on_delete=models.CASCADE
     )
     name = models.CharField(
         verbose_name="Название",
