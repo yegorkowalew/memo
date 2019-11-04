@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from .models import Order
 from incoming_documents.models import DocumentDate
+from user_profile.models import Profile
 
 from django.db.models import Q
 
@@ -61,3 +62,12 @@ def order_list(request):
     # print(last_date)
     all_orders = Order.objects.all()
     return render(request, 'order_list.html', {'all_orders': all_orders})
+
+def jsonreturn(request):
+    from django.http import HttpResponse
+    from django.core import serializers
+    dispatchers = Profile.objects.all()
+    data = serializers.serialize('json', dispatchers)
+    return HttpResponse(data, content_type='application/json')
+
+    
