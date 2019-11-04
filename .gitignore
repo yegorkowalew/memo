@@ -2,6 +2,9 @@
 pdo_local_settings.py
 bob_local_settings.py
 
+# Static files dir
+static/
+
 # logs
 logs/
 
