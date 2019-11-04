@@ -3,7 +3,13 @@ pdo_local_settings.py
 bob_local_settings.py
 
 # Static files dir
-static/
+# static/
+static/css/
+static/extra-libs/
+static/images/
+static/js/
+static/libs/
+
 
 # logs
 logs/

@@ -29,6 +29,7 @@ def dashboard(request):
         'graf': graf
     })
 
+
 def adm_index(request):
     orders = Order.objects.all().count()
 
@@ -50,6 +51,7 @@ def adm_index(request):
         'graf': graf
     })
 
+
 def order_list(request):
     # p = 'yo'
     # order = Order.objects.get(in_id=8)
@@ -63,11 +65,12 @@ def order_list(request):
     all_orders = Order.objects.all()
     return render(request, 'order_list.html', {'all_orders': all_orders})
 
+
 def jsonreturn(request):
+    import time
+    time.sleep(2)
     from django.http import HttpResponse
     from django.core import serializers
     dispatchers = Profile.objects.all()
     data = serializers.serialize('json', dispatchers)
     return HttpResponse(data, content_type='application/json')
-
-    
