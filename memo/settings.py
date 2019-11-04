@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'on.apps.OnConfig',
     'user_profile.apps.ProfileConfig',
     'incoming_documents.apps.IncomingDocumentsConfig',
+    'history.apps.HistoryConfig',
 ]
 
 MIDDLEWARE = [
