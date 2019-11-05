@@ -16,6 +16,16 @@ def dashboard(request):
 
     process_orders = Order.objects.filter(ready=False).count()
     process_orders_percent = int(process_orders*100/orders)
+
+    from datetime import datetime, timedelta
+
+    now = datetime.now()
+    b = timedelta(days=10)
+    overten = now+b
+    # print()
+    # Entry.objects.exclude(pub_date__gt=datetime.date(2005, 1, 3), headline='Hello')
+    # Order.objects.exclude(hipment_before__gt=datetime.date(2005, 1, 3), headline='Hello')
+
     graf = {
         'ready_orders': ready_orders,
         'ready_orders_percent': ready_orders_percent,
