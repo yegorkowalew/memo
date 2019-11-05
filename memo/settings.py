@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
-        # 'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ]
 }
 
@@ -153,7 +153,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    'C:/work/memo/memo/static/',
+    # 'C:\\work\\memo\\memo\\static\\',
 ]
 
 # MEDIA_ROOT = "".join(os.path.join(os.path.dirname(file), 'media').replace('\','/')
