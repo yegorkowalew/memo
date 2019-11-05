@@ -8,5 +8,5 @@ from rest_framework import viewsets
 from .serializers import HistorySerializer
 
 class HistoryViewSet(viewsets.ModelViewSet):
-    queryset = History.objects.all().order_by('pk')
+    queryset = History.objects.all().order_by('-pk')
     serializer_class = HistorySerializer
