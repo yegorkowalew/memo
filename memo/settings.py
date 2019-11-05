@@ -26,7 +26,7 @@ SECRET_KEY = 'c8xu#!qasn8ycd9xs=#e8fi4k#8ehqcz#oyh59et8ge2_oy6uu'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # FILE_PATH_FIELD_DIRECTORY = BASE_DIR
 # Application definition
@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'user_profile.apps.ProfileConfig',
     'incoming_documents.apps.IncomingDocumentsConfig',
     'history.apps.HistoryConfig',
+    'rest_framework',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -129,6 +131,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.AllowAny',
+
+    ]
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        # 'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
