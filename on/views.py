@@ -66,11 +66,11 @@ def order_list(request):
     return render(request, 'order_list.html', {'all_orders': all_orders})
 
 
-def jsonreturn(request):
-    import time
-    time.sleep(2)
-    from django.http import HttpResponse
-    from django.core import serializers
-    dispatchers = Profile.objects.all()
-    data = serializers.serialize('json', dispatchers)
-    return HttpResponse(data, content_type='application/json')
+# def jsonreturn(request):
+#     import time
+#     time.sleep(2)
+#     from django.http import HttpResponse
+#     from django.core import serializers
+#     dispatchers = Profile.objects.all()
+#     data = serializers.serialize('json', dispatchers)
+#     return HttpResponse(data, content_type='application/json')
