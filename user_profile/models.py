@@ -50,6 +50,12 @@ class Profile(models.Model):
             return '%s - %s' % (self.pk, self.fullname)
         else:
             return '%s' % self.pk
+    
+    def get_absolute_url(self):
+        if self.user_no:
+            return '/profiles/dispather/%s/' % self.pk
+        else:
+            return '/profiles/%s/' % self.pk
 
 
 @receiver(post_save, sender=User)
