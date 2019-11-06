@@ -5,6 +5,9 @@ from .models import Order
 from incoming_documents.models import DocumentDate
 from user_profile.models import Profile
 
+import datetime
+from datetime import timedelta
+
 from django.db.models import Q
 
 
@@ -17,20 +20,24 @@ def dashboard(request):
     process_orders = Order.objects.filter(ready=False).count()
     process_orders_percent = int(process_orders*100/orders)
 
-    from datetime import datetime, timedelta
+    startdate = datetime.datetime.now()
+    enddate = startdate + timedelta(days=10)
+    miniten_orders = Order.objects.filter(
+        shipment_before__range=[startdate, enddate]).count()
+    miniten_orders_percent = int(miniten_orders*100/orders)
 
-    now = datetime.now()
-    b = timedelta(days=10)
-    overten = now+b
-    # print()
-    # Entry.objects.exclude(pub_date__gt=datetime.date(2005, 1, 3), headline='Hello')
-    # Order.objects.exclude(hipment_before__gt=datetime.date(2005, 1, 3), headline='Hello')
-
+    del_orders = Order.objects.filter(
+        shipment_before__gte=startdate, ready=False).count()
+    del_orders_percent = int(del_orders*100/orders)
     graf = {
         'ready_orders': ready_orders,
         'ready_orders_percent': ready_orders_percent,
         'process_orders': process_orders,
-        'process_orders_percent': process_orders_percent
+        'process_orders_percent': process_orders_percent,
+        'miniten_orders': miniten_orders,
+        'miniten_orders_percent': miniten_orders_percent,
+        'del_orders': del_orders,
+        'del_orders_percent': del_orders_percent
     }
     return render(request, 'dashboard.html', {
         'alerts': 'alerts',
@@ -48,11 +55,25 @@ def adm_index(request):
 
     process_orders = Order.objects.filter(ready=False).count()
     process_orders_percent = int(process_orders*100/orders)
+
+    startdate = datetime.datetime.now()
+    enddate = startdate + timedelta(days=10)
+    miniten_orders = Order.objects.filter(
+        shipment_before__range=[startdate, enddate]).count()
+    miniten_orders_percent = int(miniten_orders*100/orders)
+
+    del_orders = Order.objects.filter(
+        shipment_before__gte=startdate, ready=False).count()
+    del_orders_percent = int(del_orders*100/orders)
     graf = {
         'ready_orders': ready_orders,
         'ready_orders_percent': ready_orders_percent,
         'process_orders': process_orders,
-        'process_orders_percent': process_orders_percent
+        'process_orders_percent': process_orders_percent,
+        'miniten_orders': miniten_orders,
+        'miniten_orders_percent': miniten_orders_percent,
+        'del_orders': del_orders,
+        'del_orders_percent': del_orders_percent
     }
     return render(request, 'adm/adm_index.html', {
         'alerts': 'alerts',
@@ -84,3 +105,4 @@ def order_list(request):
 #     dispatchers = Profile.objects.all()
 #     data = serializers.serialize('json', dispatchers)
 #     return HttpResponse(data, content_type='application/json')
+

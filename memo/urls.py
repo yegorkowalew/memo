@@ -17,6 +17,7 @@ urlpatterns = [
     path('on/', include('on.urls')),
     path('documents/', include('incoming_documents.urls')),
     # rest
-    path('api/', include('user_profile.urls')),
-    path('api/', include('history.urls')),
+    path('api/', include('history.api_urls')),
+    path('api/', include('user_profile.api_urls')),
+    path('api/', include('on.api_urls')),
 ]
