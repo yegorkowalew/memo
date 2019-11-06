@@ -1,4 +1,6 @@
 window.onload = function () {
+
+  // Виджет диспетчеров
   Vue.component('dispatcher-item', {
     props: ['dispatcher'],
     template: '<li class="d-flex no-block card-body border-top"><i class="fas fa-user-circle w-30px m-t-5 text-danger"></i><div><a v-bind:href="dispatcher.url" class="m-b-0 font-medium p-0">{{ dispatcher.fullname }}</a><span class="text-muted"></span></div><div class="ml-auto"><div class="tetx-right"><span class="text-muted font-16">Диспетчер</span><h5 class="text-muted m-b-0">{{ dispatcher.user_no }}</h5></div></div></li>'
@@ -36,7 +38,7 @@ window.onload = function () {
     }
   })
 
-  // aria-valuemin="0" aria-valuemax="100"
+  // Виджет график производства
 
   Vue.component('ongraph-item', {
     props: ['ongraph'],
@@ -86,5 +88,58 @@ window.onload = function () {
       }
     }
   })
+
+
+  // Виджет последние обновления
+  Vue.component('history-item', {
+    props: ['history'],
+    template: `<li class="d-flex no-block card-body">
+    <i class=""></i>
+    <i :class="[history.icon, history.color]" class="w-30px m-t-5"></i>
+    <div>
+        <a :href="history.link" class="m-b-0 font-medium p-0">{{history.name}}</a>
+        <span class="text-muted">{{history.short_text}}</span>
+    </div>
+    <div class="ml-auto">
+        <div class="tetx-right">
+            <h5 class="text-muted m-b-0">20 Янв</h5>
+            <span class="text-muted font-16">16:37:44</span>
+        </div>
+    </div>
+</li>`
+  })
+
+  var app9 = new Vue({
+    el: '#History',
+    data() {
+      return {
+        historyhList: null,
+        interval: null,
+        status: 'Загрузка...',
+      };
+    },
+    created() {
+      this.interval = setInterval(this.refreshData, 10000)
+      this.refreshData();
+    },
+    beforeDestroy() {
+      clearInterval(this.interval)
+    },
+    methods: {
+      refreshData() {
+        axios.get("http://127.0.0.1:8000/api/history/")
+          .then(response => {
+            this.historyhList = response.data;
+            this.status = null;
+          })
+          .catch(error => {
+            console.log(error);
+            this.status = error
+            this.errored = true;
+          })
+      }
+    }
+  })
+
 
 }

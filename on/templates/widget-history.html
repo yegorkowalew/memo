@@ -1,0 +1,18 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title m-b-0 text-info">Последние обновления New</h4>
+        </div>
+        <div id="History">
+            <ul class="list-style-none">
+                <history-item v-for="item in historyhList" v-bind:history="item" v-bind:key="item.id">
+                </history-item>
+            </ul>
+        </div>
+        <div class="card text-right">
+            <div class="card-body">
+                <a href="/on/history/" class="btn btn-success btn-sm">Еще...</a>
+            </div>
+        </div>
+    </div>
+</div>
