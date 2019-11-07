@@ -94,7 +94,11 @@ def order_list(request):
     #     print(al.date)
     # print(last_date)
     all_orders = Order.objects.all()
-    return render(request, 'order_list.html', {'all_orders': all_orders})
+    # [:100]
+    return render(request, 'on.html', {
+        'all_orders': all_orders,
+        'title':'Заказы'
+        })
 
 
 # def jsonreturn(request):
