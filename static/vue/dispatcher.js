@@ -1,5 +1,9 @@
 window.onload = function () {
 
+  // moment().format();
+  moment.locale('ru');
+  
+  Vue.prototype.$moment = moment;
   // Виджет диспетчеров
   Vue.component('dispatcher-item', {
     props: ['dispatcher'],
@@ -102,12 +106,14 @@ window.onload = function () {
     </div>
     <div class="ml-auto">
         <div class="tetx-right">
-            <h5 class="text-muted m-b-0">20 Янв</h5>
-            <span class="text-muted font-16">16:37:44</span>
+            <h5 class="text-muted m-b-0">{{ $moment(history.last_updated).format("DD MMM") }}</h5>
+            <span class="text-muted font-16">{{ $moment(history.last_updated).format("hh:mm:ss") }}</span>
         </div>
     </div>
 </li>`
   })
+
+// <h5 class="text-muted m-b-0"> {{$moment(history.last_updated, "MM-DD-YYYY")}}</h5>
 
   var app9 = new Vue({
     el: '#History',
