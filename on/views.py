@@ -93,8 +93,7 @@ def order_list(request):
     # for al in all_dates:
     #     print(al.date)
     # print(last_date)
-    all_orders = Order.objects.all()
-    # [:100]
+    all_orders = Order.objects.all()[:100]
     return render(request, 'on.html', {
         'all_orders': all_orders,
         'title':'Заказы'
