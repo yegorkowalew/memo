@@ -1,9 +1,5 @@
 window.onload = function () {
 
-  // moment().format();
-  moment.locale('ru');
-  
-  Vue.prototype.$moment = moment;
   // Виджет диспетчеров
   Vue.component('dispatcher-item', {
     props: ['dispatcher'],
@@ -97,6 +93,16 @@ window.onload = function () {
   // Виджет последние обновления
   Vue.component('history-item', {
     props: ['history'],
+    methods: {
+      dateToText: function (str) {
+        datestr = new Date(str).toLocaleDateString('ru-RU', { year: "numeric", month: "short", day: "numeric", hour:"numeric", minute: "numeric", second:"numeric" })
+        return datestr.split(' ').splice(0, 2).join(" ")
+      },
+      hourToText: function (str) {
+        datestr = new Date(str).toLocaleDateString('ru-RU', { year: "numeric", month: "short", day: "numeric", hour:"numeric", minute: "numeric", second:"numeric" })
+        return datestr.split(' ').splice(4, 1).join(" ")
+      },
+    },
     template: `<li class="d-flex no-block card-body">
     <i class=""></i>
     <i :class="[history.icon, history.color]" class="w-30px m-t-5"></i>
@@ -106,8 +112,8 @@ window.onload = function () {
     </div>
     <div class="ml-auto">
         <div class="tetx-right">
-            <h5 class="text-muted m-b-0">{{ $moment(history.last_updated).format("DD MMM") }}</h5>
-            <span class="text-muted font-16">{{ $moment(history.last_updated).format("hh:mm:ss") }}</span>
+            <h5 class="text-muted m-b-0">{{ dateToText(history.last_updated) }}</h5>
+            <span class="text-muted font-16">{{ hourToText(history.last_updated) }}</span>
         </div>
     </div>
 </li>`
